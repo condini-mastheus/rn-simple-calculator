@@ -7,7 +7,7 @@ export default class App extends Component {
     super(props)
 
     this.state = {
-      operation: '',
+      display: '',
       result: ''
     }
 
@@ -31,22 +31,33 @@ export default class App extends Component {
     switch (op) {
       case 'C':
         this.setState({
-          operation: '',
+          display: '',
           result: ''
         })
         break;
       case '=':
-        let finalOp = this.state.result + this.state.operation
         this.setState({
-          operation: this.state.operation,
-          result: finalOp
+          display: this.state.result,
+          result: ''
         })
         break;
       default:
-        let a = (this.state.operation + op)
+        const display = this.state.display + op
+        let result = this.state.result
+
+        try {
+          let fixOperation = display.split('x').join('*')
+          fixOperation = fixOperation.split('÷').join('/')
+
+          result = (eval(fixOperation))
+          
+        } catch(error) {
+          //throw error
+        }
+
         this.setState({
-          operation: op,
-          result: a
+          display,
+          result
         })
         break;
     }
@@ -61,7 +72,7 @@ export default class App extends Component {
       <View style={styles.container}>
         <View style={styles.display}>
           <View style={styles.displayOperations}>
-            <Text style={styles.operation}>{this.state.operation}</Text>
+            <Text style={styles.operation}>{this.state.display}</Text>
           </View>
           <View style={styles.displayResult}>
             <Text style={styles.result}>{this.state.result}</Text>
@@ -99,14 +110,14 @@ const styles = StyleSheet.create({
   },
   displayOperations: {
     flex: 1.5,
-    backgroundColor: '#fff',
+    backgroundColor: '#c1c1c1',
     alignItems: 'stretch',
     justifyContent: 'center',
     paddingRight: 15
   },
   displayResult: {
     flex: 1,
-    backgroundColor: '#aeaeae',
+    backgroundColor: '#c1c1c1',
     alignItems: 'stretch',
     justifyContent: 'center',
     paddingRight: 15
